@@ -28,4 +28,12 @@ class Token {
     public:
         Token(tokenValueType value);
 
+        bool isEOF() const;
+        bool isNumber() const;
+        bool isString() const;
+        bool isSeparator() const;
+
+        double getNumber() const;
+        std::string getString() const;
+        reservedToken getSeparator() const;
 };

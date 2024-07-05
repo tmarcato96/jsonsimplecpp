@@ -15,5 +15,5 @@ class preprocStream {
 
         int getc();
 
-        //void releaseBack(int c);
+        void push_back(int c);
 };
