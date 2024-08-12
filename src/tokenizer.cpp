@@ -72,6 +72,7 @@ Token getNumber(preprocStream& stream) {
     for(; std::isdigit(c); c = stream.getc()) {
         str.push_back(c);
     }
+    stream.push_back(c);
     return Token(std::stod(str));
 }
 
