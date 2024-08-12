@@ -1,5 +1,8 @@
 {
     "name": "Shinju",
-    "age": 3,
-    "color": "bellissimoPerla"
+    "age": 30,
+    "color": {
+        "primo": "bellissimoPerla",
+        "secondo": "bellissimoMarrone"
+    }
 }
