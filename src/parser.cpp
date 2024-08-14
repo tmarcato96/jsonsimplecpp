@@ -148,3 +148,10 @@ std::shared_ptr<JsonNode> JsonParser::parseNumber(Token& token) {
     node->value = token.getNumber();
     return node;
 }
+
+std::shared_ptr<JsonNode> JsonParser::getJsonTree() {
+    if (!_root) {
+        parse();
+    }
+    return _root;
+}
