@@ -15,6 +15,7 @@ class JsonParser {
 
     void parse();
     std::shared_ptr<JsonNode> parseObject(preprocStream& stream);
+    std::shared_ptr<JsonNode> parseList(preprocStream& stream);
     std::shared_ptr<JsonNode> parseString(Token& token);
     std::shared_ptr<JsonNode> parseNumber(Token& token);
 
