@@ -5,11 +5,13 @@
 #include <string>
 #include <optional>
 #include <variant>
+#include <vector>
 
 struct JsonNode;
 
 using JsonObject = std::map<std::string, std::shared_ptr<JsonNode>>;
-using JsonNodeType = std::variant<JsonObject*, std::string, double>;
+using JsonList = std::vector<std::shared_ptr<JsonNode>>;
+using JsonNodeType = std::variant<JsonObject*, JsonList*, std::string, double>;
 
 struct JsonNode {
 
@@ -22,6 +24,7 @@ struct JsonNode {
 
 struct PrintVisitor {
     void operator() (JsonObject*);
+    void operator() (JsonList*);
     void operator() (const std::string&);
     void operator() (double);
 };
