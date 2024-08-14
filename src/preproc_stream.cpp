@@ -1,5 +1,7 @@
 #include <preproc_stream.hpp>
 
+using namespace Json;
+
 preprocStream::preprocStream(const getcFunc& getc_input):
     _getc(getc_input)
     {

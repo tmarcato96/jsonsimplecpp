@@ -3,6 +3,8 @@
 #include <parser.hpp>
 #include <preproc_stream.hpp>
 
+using namespace Json;
+
 JsonParser::JsonParser(const std::string& filename) :
     _file(filename) {
         _getcFunc = [this] {return this->_file.get();};

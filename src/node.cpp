@@ -1,6 +1,8 @@
 #include <iostream>
 #include <node.hpp>
 
+using namespace Json;
+
 void PrintVisitor::operator()(JsonObject* object) {
     std::cout << "{\n";
     for (auto it = object->begin(); it != object->end(); ++it) {

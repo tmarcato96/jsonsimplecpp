@@ -2,6 +2,7 @@
 
 #include<tokens.hpp>
 
+using namespace Json;
 
 Token::Token(tokenValueType value) :
     _value(std::move(value))

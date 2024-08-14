@@ -3,17 +3,19 @@
 #include <stack>
 #include <functional>
 
-using getcFunc = std::function<int()>;
+namespace Json {
+    using getcFunc = std::function<int()>;
 
-class preprocStream {
-    private:
-        std::stack<int> _stack;
-        const getcFunc& _getc;
+    class preprocStream {
+        private:
+            std::stack<int> _stack;
+            const getcFunc& _getc;
 
-    public:
-        preprocStream(const getcFunc& getc_function);
+        public:
+            preprocStream(const getcFunc& getc_function);
 
-        int getc();
+            int getc();
 
-        void push_back(int c);
-};
+            void push_back(int c);
+    };
+}

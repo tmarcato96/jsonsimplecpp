@@ -3,37 +3,39 @@
 #include <string>
 #include <variant>
 
-enum struct reservedToken {
-    colon,
-    comma,
+namespace Json {
+    enum struct reservedToken {
+        colon,
+        comma,
 
-    openSquareBracket,
-    closeSquareBracket,
+        openSquareBracket,
+        closeSquareBracket,
 
-    openCurlyBracket,
-    closeCurlyBracket,
-};
+        openCurlyBracket,
+        closeCurlyBracket,
+    };
 
-struct identifier {
-    std::string name; 
-};
+    struct identifier {
+        std::string name; 
+    };
 
-struct eof {};
+    struct eof {};
 
-class Token {
-    private:
-        using tokenValueType = std::variant<double, std::string, reservedToken, identifier, eof>;
-        tokenValueType _value;
+    class Token {
+        private:
+            using tokenValueType = std::variant<double, std::string, reservedToken, identifier, eof>;
+            tokenValueType _value;
 
-    public:
-        Token(tokenValueType value);
+        public:
+            Token(tokenValueType value);
 
-        bool isEOF() const;
-        bool isNumber() const;
-        bool isString() const;
-        bool isSeparator() const;
+            bool isEOF() const;
+            bool isNumber() const;
+            bool isString() const;
+            bool isSeparator() const;
 
-        double getNumber() const;
-        std::string getString() const;
-        reservedToken getSeparator() const;
-};
+            double getNumber() const;
+            std::string getString() const;
+            reservedToken getSeparator() const;
+    };
+}
