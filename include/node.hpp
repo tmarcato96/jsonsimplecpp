@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <optional>
 #include <variant>
 
 struct JsonNode;
@@ -15,6 +16,7 @@ struct JsonNode {
     JsonNodeType value;
 
     void print();
+    std::optional<JsonObject::iterator> find(const std::string& key);
 
 };
 
