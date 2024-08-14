@@ -1,5 +1,5 @@
 #include <iostream>
-#include <node.hpp>
+#include <jsonsimplecpp/node.hpp>
 
 using namespace Json;
 

@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include <tokenizer.hpp>
-#include <node.hpp>
+#include <jsonsimplecpp/tokenizer.hpp>
+#include <jsonsimplecpp/node.hpp>
 
 namespace Json {
     class JsonParser {

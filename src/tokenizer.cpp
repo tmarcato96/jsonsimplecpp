@@ -5,8 +5,8 @@
 #include <string>
 #include <utility>
 
-#include <tokenizer.hpp>
-#include <preproc_stream.hpp>
+#include <jsonsimplecpp/tokenizer.hpp>
+#include <jsonsimplecpp/preproc_stream.hpp>
 
 namespace Json {
     enum struct CharType {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <preproc_stream.hpp>
-#include <tokens.hpp>
+#include <jsonsimplecpp/preproc_stream.hpp>
+#include <jsonsimplecpp/tokens.hpp>
 
 namespace Json {
     Token tokenize(preprocStream& stream);

@@ -1,7 +1,7 @@
 #include <sstream>
 
-#include <parser.hpp>
-#include <preproc_stream.hpp>
+#include <jsonsimplecpp/parser.hpp>
+#include <jsonsimplecpp/preproc_stream.hpp>
 
 using namespace Json;
 
