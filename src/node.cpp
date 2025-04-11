@@ -16,7 +16,7 @@ void PrintVisitor::operator()(JsonObject* object)
   _out_stream << "{\n";
   for (auto it = object->begin(); it != object->end(); ++it) {
     _out_stream << it->first << ": ";
-    std::visit(PrintVisitor{}, it->second->value);
+    std::visit(*this, it->second->value);
     auto next = it;
     ++next;
     if (next != object->end()) { _out_stream << ",\n"; }
@@ -29,7 +29,7 @@ void PrintVisitor::operator()(JsonList* list)
 {
   _out_stream << "[\n";
   for (auto it = list->begin(); it != list->end(); ++it) {
-    std::visit(PrintVisitor{}, (*it)->value);
+    std::visit(*this, (*it)->value);
     auto next = it;
     ++next;
     if (next != list->end()) { _out_stream << ",\n"; }
