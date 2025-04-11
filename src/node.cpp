@@ -39,7 +39,6 @@ void PrintVisitor::operator()(JsonList* list)
     auto next = it;
     ++next;
     if (next != list->end()) { _out_stream << ", "; }
-    _out_stream << std::endl;
   }
   _out_stream << "]\n";
 }
