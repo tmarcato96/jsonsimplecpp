@@ -21,13 +21,15 @@ void PrintVisitor::operator()(JsonObject* object)
     // Indentation
     for (int i = 0; i < _depth; ++i) { _out_stream << '\t'; }
 
-    _out_stream << it->first << ": ";
+    _out_stream << '"' << it->first << '"' << ": ";
     std::visit(*this, it->second->value);
     auto next = it;
     ++next;
     if (next != object->end()) { _out_stream << ",\n"; }
   }
-  _out_stream << "}\n";
+  _out_stream << '\n';
+  for (int i = 0; i < _depth; ++i) { _out_stream << '\t'; }
+  _out_stream << '}';
 }
 
 void PrintVisitor::operator()(JsonList* list)
