@@ -42,6 +42,7 @@ void PrintVisitor::operator()(JsonList* list)
     ++next;
     if (next != list->end()) { _out_stream << ", "; }
   }
+  _out_stream << "]";
 }
 
 void PrintVisitor::operator()(const std::string& s) { _out_stream << '"' << s << '"'; }
