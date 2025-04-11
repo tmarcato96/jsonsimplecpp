@@ -4,11 +4,13 @@
 using namespace Json;
 
 PrintVisitor::PrintVisitor() :
-  _out_stream(std::cout)
+  _out_stream(std::cout),
+  _depth{0}
 {}
 
 PrintVisitor::PrintVisitor(std::ostream& out_stream) :
-  _out_stream(out_stream)
+  _out_stream(out_stream),
+  _depth{0}
 {}
 
 void PrintVisitor::operator()(JsonObject* object)
