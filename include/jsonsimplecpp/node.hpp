@@ -37,5 +37,6 @@ namespace Json {
 
   private:
     std::ostream& _out_stream;
+    size_t _depth;
   };
 } // namespace Json

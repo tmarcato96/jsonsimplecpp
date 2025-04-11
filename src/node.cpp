@@ -14,7 +14,11 @@ PrintVisitor::PrintVisitor(std::ostream& out_stream) :
 void PrintVisitor::operator()(JsonObject* object)
 {
   _out_stream << "{\n";
+  ++_depth;
   for (auto it = object->begin(); it != object->end(); ++it) {
+    // Indentation
+    for (int i = 0; i < _depth; ++i) { _out_stream << '\t'; }
+
     _out_stream << it->first << ": ";
     std::visit(*this, it->second->value);
     auto next = it;
