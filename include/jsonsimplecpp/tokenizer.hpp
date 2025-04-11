@@ -4,7 +4,7 @@
 #include <jsonsimplecpp/tokens.hpp>
 
 namespace Json {
-    Token tokenize(preprocStream& stream);
+  Token tokenize(preprocStream& stream);
 
-    std::ostream& operator<<(std::ostream& os, reservedToken t);
-}
+  std::ostream& operator<<(std::ostream& os, reservedToken t);
+} // namespace Json
