@@ -33,12 +33,12 @@ void PrintVisitor::operator()(JsonObject* object)
 
 void PrintVisitor::operator()(JsonList* list)
 {
-  _out_stream << "[\n";
+  _out_stream << "[";
   for (auto it = list->begin(); it != list->end(); ++it) {
     std::visit(*this, (*it)->value);
     auto next = it;
     ++next;
-    if (next != list->end()) { _out_stream << ",\n"; }
+    if (next != list->end()) { _out_stream << ", "; }
     _out_stream << std::endl;
   }
   _out_stream << "]\n";
