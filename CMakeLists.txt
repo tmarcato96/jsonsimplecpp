@@ -37,3 +37,10 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+# Adding tests:
+include(CTest)
+
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
