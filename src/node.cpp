@@ -26,7 +26,6 @@ void PrintVisitor::operator()(JsonObject* object)
     auto next = it;
     ++next;
     if (next != object->end()) { _out_stream << ",\n"; }
-    _out_stream << std::endl;
   }
   _out_stream << "}\n";
 }
@@ -43,7 +42,7 @@ void PrintVisitor::operator()(JsonList* list)
   _out_stream << "]\n";
 }
 
-void PrintVisitor::operator()(const std::string& s) { _out_stream << s; }
+void PrintVisitor::operator()(const std::string& s) { _out_stream << '"' << s << '"'; }
 
 void PrintVisitor::operator()(double num) { _out_stream << num; }
 
