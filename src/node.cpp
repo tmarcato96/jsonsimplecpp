@@ -4,47 +4,47 @@
 using namespace Json;
 
 PrintVisitor::PrintVisitor() :
-  _out_stream(&std::cout)
+  _out_stream(std::cout)
 {}
 
-PrintVisitor::PrintVisitor(std::ostream* out_stream) :
+PrintVisitor::PrintVisitor(std::ostream& out_stream) :
   _out_stream(out_stream)
 {}
 
 void PrintVisitor::operator()(JsonObject* object)
 {
-  *_out_stream << "{\n";
+  _out_stream << "{\n";
   for (auto it = object->begin(); it != object->end(); ++it) {
-    *_out_stream << it->first << ": ";
+    _out_stream << it->first << ": ";
     std::visit(PrintVisitor{}, it->second->value);
     auto next = it;
     ++next;
-    if (next != object->end()) { *_out_stream << ",\n"; }
-    *_out_stream << std::endl;
+    if (next != object->end()) { _out_stream << ",\n"; }
+    _out_stream << std::endl;
   }
-  *_out_stream << "}\n";
+  _out_stream << "}\n";
 }
 
 void PrintVisitor::operator()(JsonList* list)
 {
-  *_out_stream << "[\n";
+  _out_stream << "[\n";
   for (auto it = list->begin(); it != list->end(); ++it) {
     std::visit(PrintVisitor{}, (*it)->value);
     auto next = it;
     ++next;
-    if (next != list->end()) { *_out_stream << ",\n"; }
-    *_out_stream << std::endl;
+    if (next != list->end()) { _out_stream << ",\n"; }
+    _out_stream << std::endl;
   }
-  *_out_stream << "]\n";
+  _out_stream << "]\n";
 }
 
-void PrintVisitor::operator()(const std::string& s) { *_out_stream << s; }
+void PrintVisitor::operator()(const std::string& s) { _out_stream << s; }
 
-void PrintVisitor::operator()(double num) { *_out_stream << num; }
+void PrintVisitor::operator()(double num) { _out_stream << num; }
 
 void JsonNode::print() { std::visit(PrintVisitor{}, value); }
 
-void JsonNode::print(std::ostream* out_stream) { std::visit(PrintVisitor{out_stream}, value); }
+void JsonNode::print(std::ostream& out_stream) { std::visit(PrintVisitor{out_stream}, value); }
 
 std::optional<JsonObject::iterator> JsonNode::find(const std::string& key)
 {
