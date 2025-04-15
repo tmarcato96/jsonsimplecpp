@@ -18,29 +18,29 @@ void JsonParser::parse()
     if (t.isSeparator()) {
       auto sep = t.getSeparator();
       if (sep == reservedToken::openCurlyBracket) {
-        std::shared_ptr<JsonNode> parsedObject = parseObject(stream);
-        if (!(_root)) { _root = parsedObject; }
+        std::unique_ptr<JsonNode> parsedObject = parseObject(stream);
+        if (!(_root)) { _root = std::move(parsedObject); }
         else if (sep == reservedToken::openSquareBracket) {
-          std::shared_ptr<JsonNode> parsedList = parseList(stream);
-          if (!(_root)) { _root = parsedList; }
+          std::unique_ptr<JsonNode> parsedList = parseList(stream);
+          if (!(_root)) { _root = std::move(parsedList); }
         }
       }
     }
     else if (t.isString()) {
-      std::shared_ptr<JsonNode> parsedString = parseString(t);
-      if (!_root) { _root = parsedString; }
+      std::unique_ptr<JsonNode> parsedString = parseString(t);
+      if (!_root) { _root = std::move(parsedString); }
     }
     else if (t.isNumber()) {
-      std::shared_ptr<JsonNode> parsedNumber = parseNumber(t);
-      if (!_root) { _root = parsedNumber; }
+      std::unique_ptr<JsonNode> parsedNumber = parseNumber(t);
+      if (!_root) { _root = std::move(parsedNumber); }
     }
   }
 }
 
-std::shared_ptr<JsonNode> JsonParser::parseObject(preprocStream& stream)
+std::unique_ptr<JsonNode> JsonParser::parseObject(preprocStream& stream)
 {
-  std::shared_ptr<JsonNode> node = std::make_shared<JsonNode>();
-  JsonObject* objectMap = new JsonObject();
+  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
+  std::unique_ptr<JsonObject> objectMap = std::make_unique<JsonObject>();
   // Should we check if EOF?
   bool hasCompleted = false;
   while (!hasCompleted) {
@@ -90,19 +90,19 @@ std::shared_ptr<JsonNode> JsonParser::parseObject(preprocStream& stream)
     }
   }
 
-  node->value = objectMap;
+  node->value = std::move(objectMap);
   return node;
 }
 
-std::shared_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
+std::unique_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
 {
-  std::shared_ptr<JsonNode> node = std::make_shared<JsonNode>();
-  JsonList* list = new JsonList();
+  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
+  std::unique_ptr<JsonList> list = std::make_unique<JsonList>();
 
   bool hasCompleted = false;
   while (!hasCompleted) {
     Token nextToken = tokenize(stream);
-    std::shared_ptr<JsonNode> node;
+    std::unique_ptr<JsonNode> node;
     if (nextToken.isSeparator()) {
       auto sep = nextToken.getSeparator();
       if (sep == reservedToken::openSquareBracket) { node = parseList(stream); }
@@ -119,7 +119,7 @@ std::shared_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
     else if (nextToken.isNumber()) {
       node = parseNumber(nextToken);
     }
-    list->push_back(node);
+    list->push_back(std::move(node));
     nextToken = tokenize(stream);
     if (!nextToken.isSeparator()) { throw std::runtime_error("Incorrect Json format."); }
     else {
@@ -131,26 +131,26 @@ std::shared_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
       hasCompleted = true;
     }
   }
-  node->value = list;
+  node->value = std::move(list);
   return node;
 }
 
-std::shared_ptr<JsonNode> JsonParser::parseString(Token& token)
+std::unique_ptr<JsonNode> JsonParser::parseString(Token& token)
 {
-  std::shared_ptr<JsonNode> node = std::make_shared<JsonNode>();
+  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
   node->value = token.getString();
   return node;
 }
 
-std::shared_ptr<JsonNode> JsonParser::parseNumber(Token& token)
+std::unique_ptr<JsonNode> JsonParser::parseNumber(Token& token)
 {
-  std::shared_ptr<JsonNode> node = std::make_shared<JsonNode>();
+  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
   node->value = token.getNumber();
   return node;
 }
 
-std::shared_ptr<JsonNode> JsonParser::getJsonTree()
+const JsonNode* JsonParser::getJsonTree()
 {
   if (!_root) { parse(); }
-  return _root;
+  return _root.get();
 }

@@ -10,18 +10,18 @@ namespace Json {
   {
     std::ifstream _file;
     getcFunc _getcFunc;
-    std::shared_ptr<JsonNode> _root;
-    std::unique_ptr<JsonNode> _current;
+    std::unique_ptr<JsonNode> _root;
 
   public:
     JsonParser(const std::string& filename);
 
     void parse();
-    std::shared_ptr<JsonNode> parseObject(preprocStream& stream);
-    std::shared_ptr<JsonNode> parseList(preprocStream& stream);
-    std::shared_ptr<JsonNode> parseString(Token& token);
-    std::shared_ptr<JsonNode> parseNumber(Token& token);
+    std::unique_ptr<JsonNode> parseObject(preprocStream& stream);
+    std::unique_ptr<JsonNode> parseList(preprocStream& stream);
+    std::unique_ptr<JsonNode> parseString(Token& token);
+    std::unique_ptr<JsonNode> parseNumber(Token& token);
 
-    std::shared_ptr<JsonNode> getJsonTree();
+    // Non owning pointer
+    const JsonNode* getJsonTree();
   };
 } // namespace Json

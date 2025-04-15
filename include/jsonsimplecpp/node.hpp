@@ -12,23 +12,23 @@ namespace Json {
 
   struct JsonNode;
 
-  using JsonObject = std::map<std::string, std::shared_ptr<JsonNode>>;
-  using JsonList = std::vector<std::shared_ptr<JsonNode>>;
-  using JsonNodeType = std::variant<JsonObject*, JsonList*, std::string, double>;
+  using JsonObject = std::map<std::string, std::unique_ptr<JsonNode>>;
+  using JsonList = std::vector<std::unique_ptr<JsonNode>>;
+  using JsonNodeType = std::variant<std::unique_ptr<JsonObject>, std::unique_ptr<JsonList>, std::string, double>;
 
   struct JsonNode
   {
     JsonNodeType value;
 
-    void print();
-    void print(std::ostream&);
+    void print() const;
+    void print(std::ostream&) const;
     std::optional<JsonObject::iterator> find(const std::string& key);
   };
 
   struct PrintVisitor
   {
-    void operator()(JsonObject*);
-    void operator()(JsonList*);
+    void operator()(const std::unique_ptr<JsonObject>&);
+    void operator()(const std::unique_ptr<JsonList>&);
     void operator()(const std::string&);
     void operator()(double);
 
