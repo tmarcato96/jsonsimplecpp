@@ -11,8 +11,8 @@
 					},
 					"GlossSee": "markup",
 					"GlossTerm": "Standard Generalized Markup Language",
-					"ID": "SGML",
-					"SortAs": "SGML"
+					"SortAs": "SGML",
+					"positive": 0.03
 				}
 			},
 			"title": "S"

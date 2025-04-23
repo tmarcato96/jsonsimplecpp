@@ -70,7 +70,9 @@ namespace Json {
     std::string str;
     int c = stream.getc();
 
-    for (; std::isdigit(c) || c == '.'; c = stream.getc()) { str.push_back(c); }
+    for (; std::isdigit(c) || c == '.' || c == '-' || c == '+' || c == 'e' || c == 'E'; c = stream.getc()) {
+      str.push_back(c);
+    }
     stream.push_back(c);
     return Token(std::stod(str));
   }
@@ -102,6 +104,9 @@ namespace Json {
       case CharType::punctuation:
         switch (c) {
         case '"': return getString(stream);
+
+        case '+': stream.push_back(c); return getNumber(stream);
+        case '-': stream.push_back(c); return getNumber(stream);
 
         default: stream.push_back(c); return getSeparator(stream);
         }
