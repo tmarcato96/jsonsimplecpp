@@ -53,7 +53,7 @@ template<class VisitorPolicy> void JsonNode<VisitorPolicy>::print() const { trav
 
 template<class VisitorPolicy> void JsonNode<VisitorPolicy>::print(std::ostream& os) const
 {
-  _visitor.setStream(os);
+  _visitor->setStream(os);
   traverse();
 }
 

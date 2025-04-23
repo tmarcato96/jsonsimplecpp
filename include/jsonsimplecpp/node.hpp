@@ -28,13 +28,15 @@ namespace Json {
 
     NodeType value;
 
-    JsonNode() = default;
+    JsonNode() :
+      _visitor{std::make_unique<Visitor>()}
+    {}
     explicit JsonNode(NodeType val) :
       value{std::move(val)},
-      _visitor{}
+      _visitor{std::make_unique<Visitor>()}
     {}
 
-    void traverse() const { std::visit(_visitor, value); }
+    void traverse() const { std::visit(*_visitor, value); }
 
     void print() const;
     void print(std::ostream&) const;
@@ -54,7 +56,7 @@ namespace Json {
     };
 
   private:
-    mutable Visitor _visitor;
+    std::unique_ptr<Visitor> _visitor;
   }; // namespace Json
 
   struct PrintVisitor
