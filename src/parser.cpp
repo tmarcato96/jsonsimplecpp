@@ -7,7 +7,8 @@ using namespace Json;
 
 template<class VisitorPolicy>
 JsonParser<VisitorPolicy>::JsonParser(const std::string& filename) :
-  _file(filename)
+  _file(filename),
+  _visitor(std::make_shared<VisitorPolicy>())
 {
   _getcFunc = [this] { return this->_file.get(); };
 }
@@ -46,6 +47,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseObject(
 
   auto node = std::make_unique<Node>();
   auto objectMap = std::make_unique<Object>();
+  node->setVisitor(_visitor);
 
   // Should we check if EOF?
   bool hasCompleted = false;
@@ -94,6 +96,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseObject(
       }
       hasCompleted = true;
     }
+    (*objectMap)[key]->setVisitor(_visitor);
   }
 
   node->value = std::move(objectMap);
@@ -108,6 +111,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseList(pr
 
   auto node = std::make_unique<Node>();
   auto list = std::make_unique<List>();
+  node->setVisitor(_visitor);
 
   bool hasCompleted = false;
   while (!hasCompleted) {
@@ -129,7 +133,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseList(pr
     else if (nextToken.isNumber()) {
       child = parseNumber(nextToken);
     }
-
+    child->setVisitor(_visitor);
     list->push_back(std::move(child));
 
     nextToken = tokenize(stream);
@@ -153,6 +157,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseString(
 {
   auto node = std::make_unique<JsonNode<VisitorPolicy>>();
   node->value = token.getString();
+  node->setVisitor(_visitor);
   return node;
 }
 
@@ -161,6 +166,7 @@ std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseNumber(
 {
   auto node = std::make_unique<JsonNode<VisitorPolicy>>();
   node->value = token.getNumber();
+  node->setVisitor(_visitor);
   return node;
 }
 

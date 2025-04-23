@@ -12,6 +12,7 @@ namespace Json {
     std::ifstream _file;
     getcFunc _getcFunc;
     std::unique_ptr<JsonNode<VisitorPolicy>> _root;
+    std::shared_ptr<VisitorPolicy> _visitor;
 
   public:
     explicit JsonParser(const std::string& filename);
