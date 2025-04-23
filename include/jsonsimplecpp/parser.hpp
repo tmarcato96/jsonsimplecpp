@@ -6,22 +6,24 @@
 #include <jsonsimplecpp/tokenizer.hpp>
 
 namespace Json {
-  class JsonParser
+
+  template<class VisitorPolicy = PrintVisitor> class JsonParser
   {
     std::ifstream _file;
     getcFunc _getcFunc;
-    std::unique_ptr<JsonNode> _root;
+    std::unique_ptr<JsonNode<VisitorPolicy>> _root;
 
   public:
-    JsonParser(const std::string& filename);
+    explicit JsonParser(const std::string& filename);
 
     void parse();
-    std::unique_ptr<JsonNode> parseObject(preprocStream& stream);
-    std::unique_ptr<JsonNode> parseList(preprocStream& stream);
-    std::unique_ptr<JsonNode> parseString(Token& token);
-    std::unique_ptr<JsonNode> parseNumber(Token& token);
+
+    std::unique_ptr<JsonNode<VisitorPolicy>> parseObject(preprocStream& stream);
+    std::unique_ptr<JsonNode<VisitorPolicy>> parseList(preprocStream& stream);
+    std::unique_ptr<JsonNode<VisitorPolicy>> parseString(Token& token);
+    std::unique_ptr<JsonNode<VisitorPolicy>> parseNumber(Token& token);
 
     // Non owning pointer
-    const JsonNode* getJsonTree();
+    const JsonNode<VisitorPolicy>* getJsonTree();
   };
 } // namespace Json

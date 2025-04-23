@@ -5,42 +5,48 @@
 
 using namespace Json;
 
-JsonParser::JsonParser(const std::string& filename) :
+template<class VisitorPolicy>
+JsonParser<VisitorPolicy>::JsonParser(const std::string& filename) :
   _file(filename)
 {
   _getcFunc = [this] { return this->_file.get(); };
 }
 
-void JsonParser::parse()
+template<class VisitorPolicy> void JsonParser<VisitorPolicy>::parse()
 {
   preprocStream stream(_getcFunc);
   for (Token t = tokenize(stream); !t.isEOF(); t = tokenize(stream)) {
     if (t.isSeparator()) {
       auto sep = t.getSeparator();
       if (sep == reservedToken::openCurlyBracket) {
-        std::unique_ptr<JsonNode> parsedObject = parseObject(stream);
+        auto parsedObject = parseObject(stream);
         if (!(_root)) { _root = std::move(parsedObject); }
         else if (sep == reservedToken::openSquareBracket) {
-          std::unique_ptr<JsonNode> parsedList = parseList(stream);
+          auto parsedList = parseList(stream);
           if (!(_root)) { _root = std::move(parsedList); }
         }
       }
     }
     else if (t.isString()) {
-      std::unique_ptr<JsonNode> parsedString = parseString(t);
+      auto parsedString = parseString(t);
       if (!_root) { _root = std::move(parsedString); }
     }
     else if (t.isNumber()) {
-      std::unique_ptr<JsonNode> parsedNumber = parseNumber(t);
+      auto parsedNumber = parseNumber(t);
       if (!_root) { _root = std::move(parsedNumber); }
     }
   }
 }
 
-std::unique_ptr<JsonNode> JsonParser::parseObject(preprocStream& stream)
+template<class VisitorPolicy>
+std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseObject(preprocStream& stream)
 {
-  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
-  std::unique_ptr<JsonObject> objectMap = std::make_unique<JsonObject>();
+  using Node = JsonNode<VisitorPolicy>;
+  using Object = JsonObject<VisitorPolicy>;
+
+  auto node = std::make_unique<Node>();
+  auto objectMap = std::make_unique<Object>();
+
   // Should we check if EOF?
   bool hasCompleted = false;
   while (!hasCompleted) {
@@ -94,32 +100,38 @@ std::unique_ptr<JsonNode> JsonParser::parseObject(preprocStream& stream)
   return node;
 }
 
-std::unique_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
+template<class VisitorPolicy>
+std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseList(preprocStream& stream)
 {
-  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
-  std::unique_ptr<JsonList> list = std::make_unique<JsonList>();
+  using Node = JsonNode<VisitorPolicy>;
+  using List = JsonList<VisitorPolicy>;
+
+  auto node = std::make_unique<Node>();
+  auto list = std::make_unique<List>();
 
   bool hasCompleted = false;
   while (!hasCompleted) {
     Token nextToken = tokenize(stream);
-    std::unique_ptr<JsonNode> node;
+    std::unique_ptr<Node> child;
     if (nextToken.isSeparator()) {
       auto sep = nextToken.getSeparator();
-      if (sep == reservedToken::openSquareBracket) { node = parseList(stream); }
+      if (sep == reservedToken::openSquareBracket) { child = parseList(stream); }
       else if (sep == reservedToken::openCurlyBracket) {
-        node = parseObject(stream);
+        child = parseObject(stream);
       }
       else {
         throw std::runtime_error("Incorrect Json format.");
       }
     }
     else if (nextToken.isString()) {
-      node = parseString(nextToken);
+      child = parseString(nextToken);
     }
     else if (nextToken.isNumber()) {
-      node = parseNumber(nextToken);
+      child = parseNumber(nextToken);
     }
-    list->push_back(std::move(node));
+
+    list->push_back(std::move(child));
+
     nextToken = tokenize(stream);
     if (!nextToken.isSeparator()) { throw std::runtime_error("Incorrect Json format."); }
     else {
@@ -131,26 +143,31 @@ std::unique_ptr<JsonNode> JsonParser::parseList(preprocStream& stream)
       hasCompleted = true;
     }
   }
+
   node->value = std::move(list);
   return node;
 }
 
-std::unique_ptr<JsonNode> JsonParser::parseString(Token& token)
+template<class VisitorPolicy>
+std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseString(Token& token)
 {
-  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
+  auto node = std::make_unique<JsonNode<VisitorPolicy>>();
   node->value = token.getString();
   return node;
 }
 
-std::unique_ptr<JsonNode> JsonParser::parseNumber(Token& token)
+template<class VisitorPolicy>
+std::unique_ptr<JsonNode<VisitorPolicy>> JsonParser<VisitorPolicy>::parseNumber(Token& token)
 {
-  std::unique_ptr<JsonNode> node = std::make_unique<JsonNode>();
+  auto node = std::make_unique<JsonNode<VisitorPolicy>>();
   node->value = token.getNumber();
   return node;
 }
 
-const JsonNode* JsonParser::getJsonTree()
+template<class VisitorPolicy> const JsonNode<VisitorPolicy>* JsonParser<VisitorPolicy>::getJsonTree()
 {
   if (!_root) { parse(); }
   return _root.get();
 }
+
+template class JsonParser<PrintVisitor>;
