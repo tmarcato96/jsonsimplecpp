@@ -55,6 +55,12 @@ namespace Json {
       return std::nullopt;
     };
 
+    // Utilities
+    bool isObject() const { return std::holds_alternative<std::unique_ptr<Object>>(value); }
+    bool isList() const { return std::holds_alternative<std::unique_ptr<List>>(value); }
+    bool isString() const { return std::holds_alternative<std::string>(value); }
+    bool isNumber() const { return std::holds_alternative<double>(value); }
+
   private:
     std::shared_ptr<Visitor> _visitor = nullptr;
   }; // namespace Json
