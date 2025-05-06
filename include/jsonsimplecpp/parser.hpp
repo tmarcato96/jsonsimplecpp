@@ -16,6 +16,7 @@ namespace Json {
 
   public:
     explicit JsonParser(const std::string& filename);
+    JsonParser(const std::string& filename, std::shared_ptr<VisitorPolicy> visitor);
 
     void parse();
 

@@ -13,6 +13,14 @@ JsonParser<VisitorPolicy>::JsonParser(const std::string& filename) :
   _getcFunc = [this] { return this->_file.get(); };
 }
 
+template<class VisitorPolicy>
+JsonParser<VisitorPolicy>::JsonParser(const std::string& filename, std::shared_ptr<VisitorPolicy> visitor) :
+  _file(filename),
+  _visitor(visitor)
+{
+  _getcFunc = [this] { return this->_file.get(); };
+}
+
 template<class VisitorPolicy> void JsonParser<VisitorPolicy>::parse()
 {
   preprocStream stream(_getcFunc);
