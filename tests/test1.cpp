@@ -3,6 +3,14 @@
 
 #include <jsonsimplecpp/parser.hpp>
 
+struct Visitor
+{
+  void operator()(const std::unique_ptr<Json::JsonObject<Visitor>>&) {}
+  void operator()(const std::unique_ptr<Json::JsonList<Visitor>>&) {}
+  void operator()(const std::string&) {}
+  void operator()(double) {}
+};
+
 int main()
 {
   std::ofstream outFile("./tests/output/out.json");

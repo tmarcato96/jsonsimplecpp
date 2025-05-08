@@ -49,12 +49,4 @@ void PrintVisitor::operator()(const std::string& s) { *_out_stream << '"' << s <
 
 void PrintVisitor::operator()(double num) { *_out_stream << num; }
 
-template<class VisitorPolicy> void JsonNode<VisitorPolicy>::print() const { traverse(); }
-
-template<class VisitorPolicy> void JsonNode<VisitorPolicy>::print(std::ostream& os) const
-{
-  _visitor->setStream(os);
-  traverse();
-}
-
 template class JsonNode<PrintVisitor>;

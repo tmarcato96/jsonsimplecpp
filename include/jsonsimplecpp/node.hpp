@@ -38,8 +38,14 @@ namespace Json {
 
     void traverse() const { std::visit(*_visitor, value); }
 
-    void print() const;
-    void print(std::ostream&) const;
+    void print() const { traverse(); }
+
+    void print(std::ostream& os) const
+    {
+      _visitor->setStream(os);
+      traverse();
+    }
+
     std::optional<class Object::iterator> find(const std::string& key)
     {
       if (std::holds_alternative<std::unique_ptr<Object>>(value)) {
