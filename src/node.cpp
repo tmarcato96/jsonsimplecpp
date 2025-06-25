@@ -51,4 +51,4 @@ void PrintVisitor::operator()(const std::string& s) { *_out_stream << '"' << s <
 
 void PrintVisitor::operator()(double num) { *_out_stream << num; }
 
-template class JsonNode<PrintVisitor>;
+template class Json::JsonNode<PrintVisitor>;

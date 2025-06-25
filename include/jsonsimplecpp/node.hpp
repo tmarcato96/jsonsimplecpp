@@ -46,7 +46,7 @@ namespace Json {
       traverse();
     }
 
-    std::optional<class Object::iterator> find(const std::string& key)
+    std::optional<typename Object::iterator> find(const std::string& key)
     {
       if (std::holds_alternative<std::unique_ptr<Object>>(value)) {
         Object* object = std::get<std::unique_ptr<Object>>(value).get();
@@ -59,7 +59,7 @@ namespace Json {
         }
       }
       return std::nullopt;
-    };
+    }
 
     // Utilities
     bool isObject() const { return std::holds_alternative<std::unique_ptr<Object>>(value); }
