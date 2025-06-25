@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
@@ -13,9 +14,17 @@ struct Visitor
 
 int main()
 {
-  std::ofstream outFile("./tests/output/out.json");
+#ifndef PROJECT_ROOT
+#error "PROJECT_ROOT is not defined. Define it via CMake with target_compile_definitions."
+#endif
 
-  Json::JsonParser parser("./tests/input/test.json");
+  std::filesystem::path root_path = PROJECT_ROOT;
+  std::filesystem::path outFilePath = root_path / "tests/output/out.json";
+  std::filesystem::path inFilePath = root_path / "tests/input/test.json";
+
+  std::ofstream outFile(outFilePath);
+
+  Json::JsonParser parser(inFilePath);
   parser.parse();
   auto jsonTree = parser.getJsonTree();
   if (outFile.is_open()) {
