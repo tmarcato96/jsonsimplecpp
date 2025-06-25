@@ -35,7 +35,8 @@ namespace Json {
 
   std::ostream& operator<<(std::ostream& os, reservedToken t)
   {
-    os << reversedCharacterMap.find(t)->second;
+    auto it = reversedCharacterMap.find(t);
+    if (it != reversedCharacterMap.end()) { os << std::string(it->second); }
     return os;
   }
 
