@@ -36,14 +36,19 @@ namespace Json {
 
     void setVisitor(std::shared_ptr<Visitor> visitor) { _visitor = visitor; }
 
-    void traverse() const { std::visit(*_visitor, value); }
+    void traverse(Visitor& v) const { std::visit(v, value); }
 
-    void print() const { traverse(); }
-
-    void print(std::ostream& os) const
+    void print()
     {
-      _visitor->setStream(os);
-      traverse();
+      if (!_visitor) _visitor = std::make_shared<Visitor>();
+      traverse(*_visitor);
+    }
+
+    void print(std::ostream& os)
+    {
+      if (!_visitor) _visitor = std::make_shared<Visitor>(os);
+      else _visitor->setStream(os);
+      traverse(*_visitor);
     }
 
     std::optional<typename Object::iterator> find(const std::string& key)

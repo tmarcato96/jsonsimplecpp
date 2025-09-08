@@ -183,7 +183,7 @@ namespace Json {
     }
 
     // Non owning pointer
-    const JsonNode<VisitorPolicy>* getJsonTree()
+    JsonNode<VisitorPolicy>* getJsonTree()
     {
       if (!_root) { parse(); }
       return _root.get();

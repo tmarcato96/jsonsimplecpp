@@ -25,7 +25,7 @@ void PrintVisitor::operator()(const std::unique_ptr<JsonObject<PrintVisitor>>& o
 
     *_out_stream << '"' << it->first << '"' << ": ";
     // Recursively go deeper
-    it->second->traverse();
+    it->second->traverse(*this);
     if (std::next(it) != object->end()) { *_out_stream << ",\n"; }
   }
   *_out_stream << '\n';
@@ -39,7 +39,7 @@ void PrintVisitor::operator()(const std::unique_ptr<JsonList<PrintVisitor>>& lis
   *_out_stream << "[";
   for (auto it = list->begin(); it != list->end(); ++it) {
     // Recursively go deeper
-    (*it)->traverse();
+    (*it)->traverse(*this);
     auto next = it;
     ++next;
     if (next != list->end()) { *_out_stream << ", "; }
